@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "925372448705",
+    "project_id": "lifecircle-d946d",
+    "storage_bucket": "lifecircle-d946d.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:925372448705:android:daa5865c24eefd933b3940",
+        "android_client_info": {
+          "package_name": "com.example.lifecircle"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "925372448705-420al9171jnh6uffn80i0hgt4tcqc7sm.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAkx-C1ma0MKedDw2mycYzvvFkHJza56c4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "925372448705-420al9171jnh6uffn80i0hgt4tcqc7sm.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
