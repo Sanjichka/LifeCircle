@@ -57,6 +57,7 @@ public class SignUpActivity extends AppCompatActivity {
         fullnameET = findViewById(R.id.fullname);
         SignUpBtn = findViewById(R.id.register);
         progrDialog = new ProgressDialog(this);
+
         SignInTV = findViewById(R.id.signInTV);
         SignUpBtn.setOnClickListener(new View.OnClickListener(){
             @Override
@@ -162,6 +163,7 @@ public class SignUpActivity extends AppCompatActivity {
                     fnpeh.put("fullname", fullname);
                     fnpeh.put("phone", phone);
                     fnpeh.put("email", email);
+                    fnpeh.put("rating", 0);
 
                     documentReference.set(typeh).addOnSuccessListener(new OnSuccessListener<Void>() {
                         @Override
@@ -177,17 +179,12 @@ public class SignUpActivity extends AppCompatActivity {
                         }
                     });
 
-                    if(type.equals("olderperson")) {
-                        Intent intent = new Intent(SignUpActivity.this, MainActivity.class);
-                        startActivity(intent);
-                        finish();
-                    }
-                    else {
-                        Intent intent = new Intent(SignUpActivity.this, DashboardActivity.class);
-                        intent.putExtra("type", type);
-                        startActivity(intent);
-                        finish();
-                    }
+
+                    Intent intent = new Intent(SignUpActivity.this, MainActivity.class);
+                    intent.putExtra("email", email);
+                    startActivity(intent);
+                    finish();
+
 
                 }
                 else {
@@ -207,10 +204,7 @@ public class SignUpActivity extends AppCompatActivity {
 
 
     public void radioClick(View view) {
-        if(view.getId()==R.id.rb1) {
-            type = "organizer";
-        }
-        else if(view.getId()==R.id.rb2) {
+        if(view.getId()==R.id.rb2) {
             type = "volunteer";
         }
         else if(view.getId()==R.id.rb3) {

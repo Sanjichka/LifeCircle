@@ -51,10 +51,12 @@ import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.FragmentActivity;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationManager;
 import android.os.Bundle;
+import android.widget.Button;
 import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -78,10 +80,17 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private LatLng myLocation;
     private static final int req_code = 1;
     private Marker me;
+    Intent intent;
+    public String lat_my;
+    public String long_my;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        intent = getIntent();
+        lat_my = intent.getStringExtra("lat");
+        long_my = intent.getStringExtra("long");
 
         binding = ActivityMapsBinding.inflate(getLayoutInflater());
 
@@ -112,9 +121,17 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         //za povrzuvanje markeri kliknatite, so mojata lokacija
         mMap.setOnMarkerClickListener(this);
 
-        //marker za moja lokacija
-        myLocation = getMyLocation();
 
+        //marker za moja lokacija
+        if(lat_my.equals("0")) {
+
+            lat_my = "41.983";
+            long_my = "21.467";
+            myLocation = getMyLocation();
+        }
+        else {
+            myLocation = new LatLng(Double.parseDouble(lat_my), Double.parseDouble(long_my));
+        }
         if (myLocation == null) {
             Toast.makeText(this, "Не може да се пристапи до локација. Проверете Settings.", Toast.LENGTH_LONG).show();
         } else {
@@ -126,40 +143,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             mMap.setOnMarkerDragListener(this);
         }
 
-        /*
-        *
-        *  private static void addMarkerWithCameraZooming(Context ctx, GoogleMap googleMap, double latitude, double longitude, String title, boolean dragabble) {
-            LatLng current_latlng = new LatLng(latitude, longitude);
-            googleMap.addMarker(new MarkerOptions().position(current_latlng)
-                    .title(title)
-                    .snippet(getLocality(current_latlng, ctx))
-                    .icon(BitmapDescriptorFactory.fromResource(R.drawable.person_marker))
-                    .draggable(dragabble)
-                              );
-            CameraPosition cameraPosition = new CameraPosition.Builder().target(new LatLng(latitude, longitude)).zoom(12).tilt(30).build();
-            googleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
-        }
 
-mGoogleMap.setOnMarkerDragListener(new OnMarkerDragListener() {
-            @Override
-            public void onMarkerDragStart(Marker markerDragStart) {
-                if (BuildConfig.DEBUG)
-                Log.i("Marker drag", "start");
-            }
-
-            @Override
-            public void onMarkerDragEnd(Marker markerDragEnd) {
-                if (BuildConfig.DEBUG)
-                    Log.i("Marker drag", "start");
-            }
-
-            @Override
-            public void onMarkerDrag(Marker markerDrag) {
-                if (BuildConfig.DEBUG)
-                    Log.i("Marker drag", "start");
-            }
-        });
-        * */
 
 
     }
@@ -199,6 +183,7 @@ mGoogleMap.setOnMarkerDragListener(new OnMarkerDragListener() {
             double myLng = loc.getLongitude();
             return new LatLng(myLat, myLng);
         }
+
     }
     public void onRequestPermissionsResult(int reqCode, @NonNull String permissions[], @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(reqCode, permissions, grantResults);
@@ -244,6 +229,19 @@ mGoogleMap.setOnMarkerDragListener(new OnMarkerDragListener() {
                 .draggable(true)
                 .snippet("ME!"));
         Toast.makeText(getApplicationContext(), "Lat: "+me.getPosition().latitude + ", Long: "+me.getPosition().longitude, Toast.LENGTH_SHORT).show();
+        lat_my = Double.toString(me.getPosition().latitude);
+        long_my = Double.toString(me.getPosition().longitude);
         mMap.setOnMarkerDragListener(this);
+
+    }
+    @Override
+    public void onBackPressed() {
+
+        Intent inte = new Intent(this, OP_CreateRequirementsActivity.class);
+        inte.putExtra("lat", lat_my);
+        inte.putExtra("long", long_my);
+        setResult(RESULT_OK, inte);
+        finish();
+
     }
 }

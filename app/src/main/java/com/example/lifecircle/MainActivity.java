@@ -1,17 +1,14 @@
 package com.example.lifecircle;
 
-import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
-import android.util.Patterns;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -25,13 +22,9 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.Query;
-import com.google.firebase.firestore.QueryDocumentSnapshot;
-import com.google.firebase.firestore.QuerySnapshot;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -53,10 +46,14 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        Intent in = getIntent();
+        String e = in.getStringExtra("email");
+
         db = FirebaseFirestore.getInstance();
         firebaseAuth = FirebaseAuth.getInstance();
         emailET = findViewById(R.id.email);
         passwordET = findViewById(R.id.password);
+        emailET.setText(e);
         SignInBtn = findViewById(R.id.login);
         progrDialog = new ProgressDialog(this);
         SignUpTV = findViewById(R.id.signUpTV);
@@ -156,7 +153,7 @@ public class MainActivity extends AppCompatActivity {
                                     Log.d(TAG, "No such document");
                                 }
                                 if(!type.equals("olderperson")) {
-                                    Intent intent = new Intent(MainActivity.this, DashboardActivity.class);
+                                    Intent intent = new Intent(MainActivity.this, DashboardVolActivity.class);
                                     intent.putExtra("type", type);
                                     startActivity(intent);
                                     finish();

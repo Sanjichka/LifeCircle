@@ -25,16 +25,20 @@ import android.widget.TimePicker;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QuerySnapshot;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class OP_CreateRequirementsActivity extends AppCompatActivity {
 
     public static final String TAG = "TAG";
+    private static final int REQ_CODE = 123789;
     EditText datetime;
     private Button createReqBtn;
     private ProgressDialog progrDialog;
@@ -48,6 +52,8 @@ public class OP_CreateRequirementsActivity extends AppCompatActivity {
     String reqName;
     String dateTime;
     private EditText requestName;
+    public String lat_my = "0";
+    public String long_my = "0";
 
 
     @Override
@@ -101,6 +107,20 @@ public class OP_CreateRequirementsActivity extends AppCompatActivity {
         userID = firebaseAuth.getCurrentUser().getUid();
         String r = "req_"+userID;
         DocumentReference documentReference = db.collection(r).document();
+        DocumentReference documentReference1 = db.collection("reqs_all").document();
+
+//        db.collection("reqs_all").get()
+//                .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+//                    @Override
+//                    public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+//                        if (!queryDocumentSnapshots.isEmpty()) {
+//                            List<DocumentSnapshot> list = queryDocumentSnapshots.getDocuments();
+//                            for (DocumentSnapshot d : list) {
+//
+//                            }
+//                        }
+//                    }
+//                });
 
         Map<String, Object> reqs = new HashMap<>();
         reqs.put("requestName", reqName);
@@ -108,8 +128,29 @@ public class OP_CreateRequirementsActivity extends AppCompatActivity {
         reqs.put("dateTime", dateTime);
         reqs.put("urgent", urgent);
         reqs.put("times", times);
+        reqs.put("state", "active");
+        reqs.put("id", userID);
+        reqs.put("lat", lat_my);
+        reqs.put("long", long_my);
+        reqs.put("volID", "none");
 
-        documentReference.set(reqs).addOnSuccessListener(new OnSuccessListener<Void>() {
+        Map<String, Object> reqs1 = new HashMap<>();
+        reqs1.put("requestName", reqName);
+        reqs1.put("description", textArea);
+        reqs1.put("dateTime", dateTime);
+        reqs1.put("urgent", urgent);
+        reqs1.put("times", times);
+        reqs1.put("id", userID);
+        reqs1.put("lat", lat_my);
+        reqs1.put("long", long_my);
+
+        documentReference.set(reqs1).addOnSuccessListener(new OnSuccessListener<Void>() {
+            @Override
+            public void onSuccess(Void unused) {
+                Log.d(TAG, "on Success: " + userID);
+            }
+        });
+        documentReference1.set(reqs).addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
             public void onSuccess(Void unused) {
                 Log.d(TAG, "on Success: " + userID);
@@ -191,6 +232,18 @@ public class OP_CreateRequirementsActivity extends AppCompatActivity {
 
     public void setMap(View view) {
         Intent intent = new Intent(this, MapsActivity.class);
-        startActivity(intent);
+        intent.putExtra("lat", lat_my);
+        intent.putExtra("long", long_my);
+        startActivityForResult(intent, REQ_CODE);
+
+    }
+    protected void onActivityResult(int requestCode,
+                                    int resultCode, Intent intent) {
+        super.onActivityResult(requestCode, resultCode, intent);
+        if (requestCode == REQ_CODE) {
+        // came back from SecondActivity
+            lat_my = intent.getStringExtra("lat");
+            long_my = intent.getStringExtra("long");
+        }
     }
 }

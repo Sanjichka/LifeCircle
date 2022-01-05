@@ -19,9 +19,21 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.LifeCircle">
         <activity
-            android:name=".DetailsVolPerReqActivity"
-            android:parentActivityName=".OP_ListActiveRequirementsActivity"
+            android:name=".PendingActOPActivity"
+            android:parentActivityName=".DashboardVolActivity"
             android:exported="true" />
+        <activity
+            android:name=".Vol_ListActivesActivity"
+            android:exported="true"
+            android:parentActivityName=".DashboardVolActivity" />
+        <activity
+            android:name=".Vol_ListMineActivity"
+            android:exported="true"
+            android:parentActivityName=".DashboardVolActivity" />
+        <activity
+            android:name=".DetailsVolPerReqActivity"
+            android:exported="true"
+            android:parentActivityName=".OP_ListActiveRequirementsActivity" />
 
         <meta-data
             android:name="com.google.android.geo.API_KEY"
@@ -46,7 +58,7 @@
             android:name=".DashboardOPActivity"
             android:exported="true" />
         <activity android:name=".SignUpActivity" />
-        <activity android:name=".DashboardActivity" />
+        <activity android:name=".DashboardVolActivity" />
         <activity
             android:name=".MainActivity"
             android:exported="true"

@@ -1,6 +1,5 @@
 package com.example.lifecircle;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
@@ -8,29 +7,28 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
-import com.google.firebase.auth.FirebaseAuth;
-
 public class DashboardOPActivity extends AppCompatActivity {
 
     private Button createreq;
     private Button listactreq;
+    private Button listpending;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_dashboard_opactivity);
+        setContentView(R.layout.activity_dashboard_op);
 
         Intent intentStart = getIntent();
         String type = intentStart.getStringExtra("type");
 
         createreq = findViewById(R.id.createreq);
         listactreq = findViewById(R.id.listactreq);
+        listpending = findViewById(R.id.listpending);
 
 
         createreq.setOnClickListener(new View.OnClickListener(){
@@ -45,6 +43,14 @@ public class DashboardOPActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Intent intent1 = new Intent(DashboardOPActivity.this, OP_ListActiveRequirementsActivity.class);
+                startActivity(intent1);
+                //finish();
+            }
+        });
+        listpending.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View view) {
+                Intent intent1 = new Intent(DashboardOPActivity.this, PendingActOPActivity.class);
                 startActivity(intent1);
                 //finish();
             }

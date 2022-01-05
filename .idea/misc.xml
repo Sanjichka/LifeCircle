@@ -5,11 +5,16 @@
       <map>
         <entry key="..\:/Users/sanja/AndroidStudioProjects/LifeCircle/app/src/main/res/drawable-v24/ic_launcher_foreground.xml" value="0.2759259259259259" />
         <entry key="..\:/Users/sanja/AndroidStudioProjects/LifeCircle/app/src/main/res/drawable/edittext_field.xml" value="0.2064814814814815" />
+        <entry key="..\:/Users/sanja/AndroidStudioProjects/LifeCircle/app/src/main/res/drawable/ic_baseline_description_24.xml" value="0.22962962962962963" />
         <entry key="..\:/Users/sanja/AndroidStudioProjects/LifeCircle/app/src/main/res/drawable/ic_menu_camera.xml" value="0.27314814814814814" />
         <entry key="..\:/Users/sanja/AndroidStudioProjects/LifeCircle/app/src/main/res/drawable/ic_menu_gallery.xml" value="0.27314814814814814" />
         <entry key="..\:/Users/sanja/AndroidStudioProjects/LifeCircle/app/src/main/res/drawable/ic_menu_slideshow.xml" value="0.27314814814814814" />
         <entry key="..\:/Users/sanja/AndroidStudioProjects/LifeCircle/app/src/main/res/drawable/listtextfields.xml" value="0.26851851851851855" />
+        <entry key="..\:/Users/sanja/AndroidStudioProjects/LifeCircle/app/src/main/res/drawable/row_pending_op.xml" value="0.23333333333333334" />
         <entry key="..\:/Users/sanja/AndroidStudioProjects/LifeCircle/app/src/main/res/drawable/side_nav_bar.xml" value="0.27314814814814814" />
+        <entry key="..\:/Users/sanja/AndroidStudioProjects/LifeCircle/app/src/main/res/layout-w1240dp/activity_vol_list_mine.xml" value="0.1" />
+        <entry key="..\:/Users/sanja/AndroidStudioProjects/LifeCircle/app/src/main/res/layout-w1240dp/row_list_actives.xml" value="0.1" />
+        <entry key="..\:/Users/sanja/AndroidStudioProjects/LifeCircle/app/src/main/res/layout/activity_dashboard_op.xml" value="0.2734375" />
         <entry key="..\:/Users/sanja/AndroidStudioProjects/LifeCircle/app/src/main/res/layout/activity_dashboard_opactivity.xml" value="0.26979166666666665" />
         <entry key="..\:/Users/sanja/AndroidStudioProjects/LifeCircle/app/src/main/res/layout/activity_details_vol_per_req.xml" value="0.14322916666666666" />
         <entry key="..\:/Users/sanja/AndroidStudioProjects/LifeCircle/app/src/main/res/layout/activity_email_password.xml" value="0.14270833333333333" />
@@ -19,9 +24,15 @@
         <entry key="..\:/Users/sanja/AndroidStudioProjects/LifeCircle/app/src/main/res/layout/activity_maps2.xml" value="0.14322916666666666" />
         <entry key="..\:/Users/sanja/AndroidStudioProjects/LifeCircle/app/src/main/res/layout/activity_op_create_requirements.xml" value="0.26979166666666665" />
         <entry key="..\:/Users/sanja/AndroidStudioProjects/LifeCircle/app/src/main/res/layout/activity_op_list_active_requirements.xml" value="0.26979166666666665" />
+        <entry key="..\:/Users/sanja/AndroidStudioProjects/LifeCircle/app/src/main/res/layout/activity_pending_act_opactivity.xml" value="0.14322916666666666" />
+        <entry key="..\:/Users/sanja/AndroidStudioProjects/LifeCircle/app/src/main/res/layout/activity_vol_list_actives.xml" value="0.13854166666666667" />
+        <entry key="..\:/Users/sanja/AndroidStudioProjects/LifeCircle/app/src/main/res/layout/activity_vol_list_mine.xml" value="0.13854166666666667" />
         <entry key="..\:/Users/sanja/AndroidStudioProjects/LifeCircle/app/src/main/res/layout/content_maps.xml" value="0.2734375" />
         <entry key="..\:/Users/sanja/AndroidStudioProjects/LifeCircle/app/src/main/res/layout/dashboard.xml" value="0.1" />
+        <entry key="..\:/Users/sanja/AndroidStudioProjects/LifeCircle/app/src/main/res/layout/dashboardvol.xml" value="0.14322916666666666" />
+        <entry key="..\:/Users/sanja/AndroidStudioProjects/LifeCircle/app/src/main/res/layout/row_list_actives.xml" value="0.2734375" />
         <entry key="..\:/Users/sanja/AndroidStudioProjects/LifeCircle/app/src/main/res/layout/row_list_requirements.xml" value="0.2734375" />
+        <entry key="..\:/Users/sanja/AndroidStudioProjects/LifeCircle/app/src/main/res/layout/row_pending_op.xml" value="0.8347826363864612" />
         <entry key="..\:/Users/sanja/AndroidStudioProjects/LifeCircle/app/src/main/res/layout/signup.xml" value="0.16695652727729227" />
         <entry key="..\:/Users/sanja/AndroidStudioProjects/LifeCircle/app/src/main/res/menu/activity_main_drawer.xml" value="0.2734375" />
         <entry key="..\:/Users/sanja/AndroidStudioProjects/LifeCircle/app/src/main/res/menu/maps.xml" value="0.14322916666666666" />

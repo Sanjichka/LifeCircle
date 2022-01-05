@@ -25,5 +25,8 @@
     <string name="create">CREATE</string>
     <string name="title_activity_maps">MapsActivity</string>
     <string name="action_settings">Settings</string>
+    <string name="mine_activities">Mine Activities</string>
+    <string name="active_activities">Active Activities</string>
+    <string name="pending_requirements">Pending Requirements</string>
 
 </resources>
