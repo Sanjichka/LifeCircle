@@ -35,7 +35,7 @@
             android:paddingTop="7dp"/>
 
         <TextView
-            android:id="@+id/whose"
+            android:id="@+id/volName"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="?android:selectableItemBackground"
@@ -51,12 +51,12 @@
 
 
         <TextView
-            android:id="@+id/volemail"
+            android:id="@+id/volEmail"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="?android:selectableItemBackground"
             android:clickable="true"
-            android:layout_below="@+id/whose"
+            android:layout_below="@+id/volName"
             android:focusable="true"
             android:text="Volunteer's email: "
             android:textColor="@color/white"
@@ -65,12 +65,12 @@
             android:paddingTop="7dp"/>
 
         <TextView
-            android:id="@+id/volphone"
+            android:id="@+id/volPhone"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="?android:selectableItemBackground"
             android:clickable="true"
-            android:layout_below="@+id/volemail"
+            android:layout_below="@+id/volEmail"
             android:focusable="true"
             android:text="Volunteer's Phone Number: "
             android:textColor="@color/white"
@@ -78,12 +78,12 @@
             android:paddingLeft="7dp"
             android:paddingTop="7dp"/>
         <TextView
-            android:id="@+id/volrating"
+            android:id="@+id/volRating"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="?android:selectableItemBackground"
             android:clickable="true"
-            android:layout_below="@+id/volphone"
+            android:layout_below="@+id/volPhone"
             android:focusable="true"
             android:text="Volunteer's rating : "
             android:textColor="@color/white"
@@ -102,8 +102,8 @@
             android:textColor="@color/colorPrimary"
             android:text="State: " />
 
-        <Button
-            android:id="@+id/btnapply"
+        <!--<Button
+            android:id="@+id/btnrate"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@id/picture"
@@ -112,7 +112,7 @@
             android:textSize="15sp"
             android:textStyle="bold"
             android:textColor="@color/white"
-            android:text="APPLY" />
+            android:text="Rate" />-->
 
     </RelativeLayout>
 </androidx.cardview.widget.CardView>

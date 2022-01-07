@@ -15,15 +15,22 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.firestore.Transaction;
 import com.google.firebase.firestore.WriteBatch;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -59,22 +66,45 @@ public class DashboardVolActivity extends AppCompatActivity {
         String r = "vol_loc_"+userID;
 
 
-
-
-
         DocumentReference dR = db.collection(r).document(userID);
 
-        Map<String, Object> vol = new HashMap<>();
-        vol.put("lat", lat_my);
-        vol.put("long", long_my);
-
-
-        dR.set(vol).addOnSuccessListener(new OnSuccessListener<Void>() {
+        dR.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
-            public void onSuccess(Void unused) {
-                Log.d(TAG, "on Success: " + userID);
+            public void onComplete(@NonNull Task<DocumentSnapshot> task1) {
+                if (task1.isSuccessful()) {
+                    DocumentSnapshot document1 = task1.getResult();
+                    if (document1.exists()) {
+                        Log.d(TAG, "DocumentSnapshot data: " + document1.getData());
+                        JSONObject jsonObject1 = new JSONObject(document1.getData());
+                        try {
+                            Log.d(TAG, "VALUEEEEEEEEEEEEEEEEEEEEEEEE: " + jsonObject1.getString("lat"));
+
+
+
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+
+                    } else {
+                        Log.d(TAG, "No such document");
+                        Map<String, Object> vol = new HashMap<>();
+                        vol.put("lat", "0");
+                        vol.put("long", "0");
+
+
+                        dR.set(vol).addOnSuccessListener(new OnSuccessListener<Void>() {
+                            @Override
+                            public void onSuccess(Void unused) {
+                                Log.d(TAG, "on Success: " + userID);
+                            }
+                        });
+                    }
+                } else {
+                    Log.d(TAG, "get failed with ", task1.getException());
+                }
             }
         });
+
 
 
         listmine.setOnClickListener(new View.OnClickListener(){
@@ -125,7 +155,7 @@ public class DashboardVolActivity extends AppCompatActivity {
 
 
     public void setMap(View view) {
-        Intent intent = new Intent(this, MapsActivity.class);
+        Intent intent = new Intent(this, MapsVolActivity.class);
         intent.putExtra("lat", lat_my);
         intent.putExtra("long", long_my);
         startActivityForResult(intent, REQ_CODE);
@@ -145,9 +175,9 @@ public class DashboardVolActivity extends AppCompatActivity {
             vol.put("long", long_my);
 
 
-            DocumentReference sfRef = db.collection(r).document(userID);
+            db.collection(r).document(userID).update(vol);
 
-            db.runTransaction(new Transaction.Function<Void>() {
+            /*db.runTransaction(new Transaction.Function<Void>() {
                 @Override
                 public Void apply(Transaction transaction) throws FirebaseFirestoreException {
                     DocumentSnapshot snapshot = transaction.get(sfRef);
@@ -172,7 +202,7 @@ public class DashboardVolActivity extends AppCompatActivity {
                     Log.w(TAG, "Transaction failure.", e);
                 }
             });
-
+*/
 
         }
     }

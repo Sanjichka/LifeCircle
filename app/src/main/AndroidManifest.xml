@@ -19,8 +19,8 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.LifeCircle">
         <activity
-            android:name=".PendingActOPActivity"
-            android:parentActivityName=".DashboardVolActivity"
+            android:name=".InProgressOPActivity"
+            android:parentActivityName=".DashboardOPActivity"
             android:exported="true" />
         <activity
             android:name=".Vol_ListActivesActivity"
@@ -43,6 +43,10 @@
             android:name=".MapsActivity"
             android:exported="true"
             android:label="@string/title_activity_maps" />
+        <activity
+            android:name=".MapsVolActivity"
+            android:exported="true"
+            android:label="MapsVolActivity" />
 
         <uses-library android:name="com.google.android.maps" />
 

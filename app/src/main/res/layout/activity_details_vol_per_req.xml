@@ -33,7 +33,7 @@
             android:textStyle="bold"/>
 
         <TextView
-            android:id="@+id/volName"
+            android:id="@+id/volNameInfo"
             android:textSize="24sp"
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="20dp"
@@ -43,7 +43,7 @@
             android:textColor="#06a4d4"
             android:textStyle="bold"/>
         <TextView
-            android:id="@+id/volEmail"
+            android:id="@+id/volEmailInfo"
             android:textSize="24sp"
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="20dp"
@@ -53,7 +53,7 @@
             android:textColor="#06a4d4"
             android:textStyle="bold"/>
         <TextView
-            android:id="@+id/volPhone"
+            android:id="@+id/volPhoneInfo"
             android:textSize="24sp"
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="20dp"

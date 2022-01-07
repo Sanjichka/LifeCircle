@@ -27,6 +27,6 @@
     <string name="action_settings">Settings</string>
     <string name="mine_activities">Mine Activities</string>
     <string name="active_activities">Active Activities</string>
-    <string name="pending_requirements">Pending Requirements</string>
+    <string name="inprogress_requirements">IN-PROGRESS REQUIREMENTS</string>
 
 </resources>

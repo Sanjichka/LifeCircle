@@ -46,6 +46,8 @@ public class OP_ListActiveRequirementsActivity extends AppCompatActivity {
     ArrayList<String> urgentArray = new ArrayList<String>();
     ArrayList<String> dateTimeArray = new ArrayList<String>();
     ArrayList<String> timesArray = new ArrayList<String>();
+    ArrayList<String> stateArray = new ArrayList<String>();
+    ArrayList<String> volIDArray = new ArrayList<String>();
 
     public static final String TAG = "TAG";
     private ProgressDialog progrDialog;
@@ -71,7 +73,7 @@ public class OP_ListActiveRequirementsActivity extends AppCompatActivity {
         firebaseAuth = FirebaseAuth.getInstance();
         progrDialog = new ProgressDialog(this);
         userID = firebaseAuth.getCurrentUser().getUid();
-        db.collection("req_"+userID)
+        db.collection("reqs_all")
         .get()
         .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
@@ -86,12 +88,18 @@ public class OP_ListActiveRequirementsActivity extends AppCompatActivity {
                             String dateTime = jsonObject.getString("dateTime");
                             String urgent = jsonObject.getString("urgent");
                             String times = jsonObject.getString("times");
+                            String state = jsonObject.getString("state");
+                            String volID = jsonObject.getString("volID");
                             Log.d(TAG, document.getId() + " => " + requestName);
-                            reqNameArray.add(requestName);
-                            descriptionArray.add(description);
-                            dateTimeArray.add(dateTime);
-                            urgentArray.add(urgent);
-                            timesArray.add(times);
+                            if(state.equals("pending") || state.equals("active")) {
+                                reqNameArray.add(requestName);
+                                descriptionArray.add(description);
+                                dateTimeArray.add(dateTime);
+                                urgentArray.add(urgent);
+                                timesArray.add(times);
+                                stateArray.add(state);
+                                volIDArray.add(volID);
+                            }
 
                         } catch (JSONException e) {
                             e.printStackTrace();
@@ -105,7 +113,7 @@ public class OP_ListActiveRequirementsActivity extends AppCompatActivity {
                 mRecyclerView.setHasFixedSize(true);
                 mRecyclerView.setLayoutManager(new LinearLayoutManager(OP_ListActiveRequirementsActivity.this));
                 mRecyclerView.setItemAnimator(new DefaultItemAnimator());
-                mAdapter = new RequirementsAdapter(OP_ListActiveRequirementsActivity.this, reqNameArray, descriptionArray, dateTimeArray, urgentArray, timesArray);
+                mAdapter = new RequirementsAdapter(OP_ListActiveRequirementsActivity.this, reqNameArray, descriptionArray, dateTimeArray, urgentArray, timesArray, stateArray, volIDArray);
                 mRecyclerView.setAdapter(mAdapter);
             }
         });

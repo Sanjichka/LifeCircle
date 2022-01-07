@@ -50,7 +50,7 @@ public class DashboardOPActivity extends AppCompatActivity {
         listpending.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view) {
-                Intent intent1 = new Intent(DashboardOPActivity.this, PendingActOPActivity.class);
+                Intent intent1 = new Intent(DashboardOPActivity.this, InProgressOPActivity.class);
                 startActivity(intent1);
                 //finish();
             }

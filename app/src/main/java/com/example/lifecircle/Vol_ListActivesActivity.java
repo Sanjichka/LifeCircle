@@ -45,6 +45,7 @@ public class Vol_ListActivesActivity extends AppCompatActivity {
     ArrayList<String> longArray = new ArrayList<String>();
     ArrayList<String> ratingArray = new ArrayList<String>();
     ArrayList<String> idArray = new ArrayList<String>();
+    ArrayList<String> stateArray = new ArrayList<String>();
     private Button applybtn;
 
     public static final String TAG = "TAG";
@@ -99,14 +100,18 @@ public class Vol_ListActivesActivity extends AppCompatActivity {
                                     String dateTime = jsonObject.getString("dateTime");
                                     String lats = jsonObject.getString("lat");
                                     String longs = jsonObject.getString("long");
+                                    String state = jsonObject.getString("state");
                                     Log.d(TAG, document.getId() + " => " + requestName);
-                                    reqNameArray.add(requestName);
-                                    dateTimeArray.add(dateTime);
-                                    latArray.add(lats);
-                                    longArray.add(longs);
+                                    if(state.equals("pending") || state.equals("active")) {
+                                        reqNameArray.add(requestName);
+                                        dateTimeArray.add(dateTime);
+                                        latArray.add(lats);
+                                        longArray.add(longs);
+                                        stateArray.add(state);
 
 
-                                    idArray.add(jsonObject.getString("id"));
+                                        idArray.add(jsonObject.getString("id"));
+                                    }
 
                                     Log.d(TAG, document.getId() + " => " + idArray);
 
@@ -153,7 +158,7 @@ public class Vol_ListActivesActivity extends AppCompatActivity {
                                     mRecyclerView.setHasFixedSize(true);
                                     mRecyclerView.setLayoutManager(new LinearLayoutManager(Vol_ListActivesActivity.this));
                                     mRecyclerView.setItemAnimator(new DefaultItemAnimator());
-                                    mAdapter = new VolAdapter(Vol_ListActivesActivity.this, reqNameArray, dateTimeArray, opArray, ratingArray, latArray, longArray, idArray);
+                                    mAdapter = new VolAdapter(Vol_ListActivesActivity.this, reqNameArray, dateTimeArray, opArray, ratingArray, latArray, longArray, idArray, stateArray);
                                     mRecyclerView.setAdapter(mAdapter);
                                 }
                             });
@@ -165,13 +170,6 @@ public class Vol_ListActivesActivity extends AppCompatActivity {
 
     }
 
-//    public void applyFunction(View view) {
-//        applybtn = findViewById(R.id.btnapply);
-//        applybtn.setText("Pending...");
-//        applybtn.setBackgroundColor(Color.YELLOW);
-//        Log.d(TAG, "HELOOOOOOOOOOOOo " + view);
-//
-//    }
 
 
     @Override

@@ -31,7 +31,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 
-public class VolAdapter extends RecyclerView.Adapter<VolAdapter.VolViewHolder> {
+public class VolMineAdapter extends RecyclerView.Adapter<VolMineAdapter.VolViewHolder> {
     private LayoutInflater mInflater;
     private Context mContext;
     private FirebaseAuth firebaseAuth;
@@ -54,7 +54,7 @@ public class VolAdapter extends RecyclerView.Adapter<VolAdapter.VolViewHolder> {
         public TextView myDistance;
         public TextView myRating;
         public TextView myWhose;
-        public Button apply_btn;
+        public Button finish_btn;
 
         public ImageView Pic;
         public VolViewHolder(View itemView) {
@@ -65,15 +65,18 @@ public class VolAdapter extends RecyclerView.Adapter<VolAdapter.VolViewHolder> {
             myDistance = (TextView) itemView.findViewById(R.id.distance);
             myRating = (TextView) itemView.findViewById(R.id.rating);
             myWhose = (TextView) itemView.findViewById(R.id.whose);
-            apply_btn = (Button) itemView.findViewById(R.id.btnapply);
+            finish_btn = (Button) itemView.findViewById(R.id.btnfinish);
 
             Pic = (ImageView) itemView.findViewById(R.id.picture);
         }
     }
 
-    public VolAdapter(Context context, ArrayList<String> reqNameArray, ArrayList<String> dateTimeArray, ArrayList<String> opArray, ArrayList<String> ratingArray, ArrayList<String> latArray, ArrayList<String> longArray, ArrayList<String> idArray, ArrayList<String> stateArray) {
+    public VolMineAdapter(Context context, ArrayList<String> reqNameArray, ArrayList<String> dateTimeArray, ArrayList<String> opArray, ArrayList<String> ratingArray, ArrayList<String> latArray, ArrayList<String> longArray, ArrayList<String> idArray, ArrayList<String> stateArray) {
         mInflater = LayoutInflater.from(context);
         this.mContext = context;
+
+
+
         this.reqNameArray = reqNameArray;
         this.dateTimeArray = dateTimeArray;
         this.opArray = opArray;
@@ -82,17 +85,19 @@ public class VolAdapter extends RecyclerView.Adapter<VolAdapter.VolViewHolder> {
         this.longArray = longArray;
         this.idArray = idArray;
         this.stateArray = stateArray;
+
     }
 
     @NonNull
     @Override
     public VolViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View mItemView = mInflater.inflate(R.layout.row_list_actives, parent, false);
+        View mItemView = mInflater.inflate(R.layout.row_list_vol_mine, parent, false);
         return new VolViewHolder(mItemView);
     }
 
     @Override
     public void onBindViewHolder(@NonNull VolViewHolder viewHolder, @SuppressLint("RecyclerView") int position) {
+        if(stateArray.get(position).equals("in-progress")) {
             viewHolder.myName.setText("Requirement Name: " + reqNameArray.get(position));
             viewHolder.myDateTime.setText("DateTime: " + dateTimeArray.get(position));
             viewHolder.myWhose.setText("Older Person : " + opArray.get(position));
@@ -155,24 +160,13 @@ public class VolAdapter extends RecyclerView.Adapter<VolAdapter.VolViewHolder> {
             viewHolder.myRating.setText("Older Person's Rating : " + ratingArray.get(position));
             viewHolder.myState.setText("State: " + stateArray.get(position));
 
-            if (stateArray.get(position).equals("pending")) {
-                viewHolder.apply_btn.setText("Pending...");
-                viewHolder.apply_btn.setBackgroundColor(Color.YELLOW);
-            }
 
-            viewHolder.apply_btn.setOnClickListener(new View.OnClickListener() {
+            viewHolder.finish_btn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-//                Intent intent = new Intent(mContext, DetailsVolPerReqActivity.class);
-//                mContext.startActivity(intent);
-//                String OPid = idArray.get(position);
-
-                    viewHolder.apply_btn.setText("Pending...");
-                    viewHolder.apply_btn.setBackgroundColor(Color.YELLOW);
 
                     Map<String, Object> map1 = new HashMap<>();
-                    map1.put("state", "pending");
-                    map1.put("volID", userID);
+                    map1.put("state", "done");
 
                     db.collection("reqs_all")
                             .get()
@@ -191,7 +185,7 @@ public class VolAdapter extends RecyclerView.Adapter<VolAdapter.VolViewHolder> {
                                                 if (i == position) {
                                                     //Do something with the document at that index.
                                                     db.collection("reqs_all").document(_documentSnapshot.getId()).update(map1);
-                                                    viewHolder.myState.setText("State: pending");
+                                                    viewHolder.myState.setText("State: done");
                                                     return;
                                                 }
 
@@ -205,6 +199,7 @@ public class VolAdapter extends RecyclerView.Adapter<VolAdapter.VolViewHolder> {
                 }
             });
 
+        }
     }
 
     @Override
