@@ -63,9 +63,21 @@ public class DetailsVolPerReqActivity extends AppCompatActivity {
                             TextView volName = findViewById(R.id.volNameInfo);
                             TextView volPhone = findViewById(R.id.volPhoneInfo);
                             TextView volEmail = findViewById(R.id.volEmailInfo);
+                            TextView volRating = findViewById(R.id.volRatingInfo);
                             volName.setText("Name : " + jsonObject1.getString("fullname"));
                             volPhone.setText("Phone Number : " + jsonObject1.getString("phone"));
                             volEmail.setText("Email : " + jsonObject1.getString("email"));
+
+                            if (jsonObject1.getString("rating").equals("0")) {
+                                volRating.setText("Rating : " + jsonObject1.getString("rating")+"/5");
+
+                            } else {
+                                String[] rate = new String[2];
+                                rate = jsonObject1.getString("rating").split("/");
+                                double a = (double) (Double.parseDouble(rate[0]) / Integer.parseInt(rate[1]));
+                                double round = Math.round(a * 100.0) / 100.0;
+                                volRating.setText("Rating : " + round +"/5");
+                            }
 
 
                         } catch (JSONException e) {

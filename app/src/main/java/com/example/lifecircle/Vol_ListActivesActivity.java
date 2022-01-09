@@ -103,7 +103,7 @@ public class Vol_ListActivesActivity extends AppCompatActivity {
                                     String state = jsonObject.getString("state");
                                     String docID = jsonObject.getString("doc_id");
                                     Log.d(TAG, document.getId() + " => " + requestName);
-                                    if(state.equals("pending") || state.equals("active")) {
+                                    if((state.equals("pending") && userID.equals(jsonObject.getString("volID")))|| state.equals("active")) {
                                         reqNameArray.add(requestName);
                                         dateTimeArray.add(dateTime);
                                         latArray.add(lats);

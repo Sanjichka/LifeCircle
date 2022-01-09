@@ -100,7 +100,7 @@ public class Vol_ListMineActivity extends AppCompatActivity {
                                     String state = jsonObject.getString("state");
                                     String docID = jsonObject.getString("doc_id");
                                     Log.d(TAG, document.getId() + " => " + requestName);
-                                    if(state.equals("in-progress")) { // || state.equals("done") || state.equals("rated")) {
+                                    if(state.equals("in-progress") && (userID.equals(jsonObject.getString("volID")))) { // || state.equals("done") || state.equals("rated")) {
                                         reqNameArray.add(requestName);
                                         dateTimeArray.add(dateTime);
                                         latArray.add(lats);
