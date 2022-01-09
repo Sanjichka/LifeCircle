@@ -99,7 +99,7 @@ public class Vol_ListDoneActivity extends AppCompatActivity {
                                     String state = jsonObject.getString("state");
                                     String docID = jsonObject.getString("doc_id");
                                     Log.d(TAG, document.getId() + " => " + requestName);
-                                    if(state.equals("done") || state.equals("rated_o") || state.equals("rated_vo")) {
+                                    if(state.equals("done") || state.equals("rated_o") || state.equals("rated_vo") || state.equals("rated_v")) {
                                         reqNameArray.add(requestName);
                                         dateTimeArray.add(dateTime);
                                         latArray.add(lats);
