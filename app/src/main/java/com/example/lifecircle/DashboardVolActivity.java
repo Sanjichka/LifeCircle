@@ -27,7 +27,6 @@ import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.firestore.Transaction;
-import com.google.firebase.firestore.WriteBatch;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -41,6 +40,7 @@ public class DashboardVolActivity extends AppCompatActivity {
     private static final int REQ_CODE = 789123;
     private Button listmine;
     private Button listactives;
+    private Button list_vol_done;
     public String lat_my = "0";
     public String long_my = "0";
     private FirebaseAuth firebaseAuth;
@@ -57,6 +57,7 @@ public class DashboardVolActivity extends AppCompatActivity {
 
         listmine = findViewById(R.id.listmine);
         listactives = findViewById(R.id.listactives);
+        list_vol_done = findViewById(R.id.list_vol_done);
 
         db = FirebaseFirestore.getInstance();
         firebaseAuth = FirebaseAuth.getInstance();
@@ -119,6 +120,15 @@ public class DashboardVolActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Intent intent1 = new Intent(DashboardVolActivity.this, Vol_ListActivesActivity.class);
+                startActivity(intent1);
+                //finish();
+            }
+        });
+
+        list_vol_done.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View view) {
+                Intent intent1 = new Intent(DashboardVolActivity.this, Vol_ListDoneActivity.class);
                 startActivity(intent1);
                 //finish();
             }

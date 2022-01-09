@@ -48,6 +48,8 @@ public class OP_ListActiveRequirementsActivity extends AppCompatActivity {
     ArrayList<String> timesArray = new ArrayList<String>();
     ArrayList<String> stateArray = new ArrayList<String>();
     ArrayList<String> volIDArray = new ArrayList<String>();
+    ArrayList<String> myIDArray = new ArrayList<String>();
+    ArrayList<String> docIDArray = new ArrayList<String>();
 
     public static final String TAG = "TAG";
     private ProgressDialog progrDialog;
@@ -89,9 +91,12 @@ public class OP_ListActiveRequirementsActivity extends AppCompatActivity {
                             String urgent = jsonObject.getString("urgent");
                             String times = jsonObject.getString("times");
                             String state = jsonObject.getString("state");
+                            String myID = jsonObject.getString("id");
+                            String docID = jsonObject.getString("doc_id");
                             String volID = jsonObject.getString("volID");
+                            myIDArray.add(myID);
                             Log.d(TAG, document.getId() + " => " + requestName);
-                            if(state.equals("pending") || state.equals("active")) {
+                            if((state.equals("pending") || state.equals("active")) && myID.equals(userID)) {
                                 reqNameArray.add(requestName);
                                 descriptionArray.add(description);
                                 dateTimeArray.add(dateTime);
@@ -99,6 +104,7 @@ public class OP_ListActiveRequirementsActivity extends AppCompatActivity {
                                 timesArray.add(times);
                                 stateArray.add(state);
                                 volIDArray.add(volID);
+                                docIDArray.add(docID);
                             }
 
                         } catch (JSONException e) {
@@ -113,7 +119,7 @@ public class OP_ListActiveRequirementsActivity extends AppCompatActivity {
                 mRecyclerView.setHasFixedSize(true);
                 mRecyclerView.setLayoutManager(new LinearLayoutManager(OP_ListActiveRequirementsActivity.this));
                 mRecyclerView.setItemAnimator(new DefaultItemAnimator());
-                mAdapter = new RequirementsAdapter(OP_ListActiveRequirementsActivity.this, reqNameArray, descriptionArray, dateTimeArray, urgentArray, timesArray, stateArray, volIDArray);
+                mAdapter = new RequirementsAdapter(OP_ListActiveRequirementsActivity.this, reqNameArray, descriptionArray, dateTimeArray, urgentArray, timesArray, stateArray, volIDArray, myIDArray, docIDArray);
                 mRecyclerView.setAdapter(mAdapter);
             }
         });

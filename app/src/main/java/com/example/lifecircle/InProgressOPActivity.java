@@ -80,8 +80,9 @@ public class InProgressOPActivity extends AppCompatActivity {
                                     String requestName = jsonObject.getString("requestName");
                                     String state = jsonObject.getString("state");
                                     String volID = jsonObject.getString("volID");
+                                    String myID = jsonObject.getString("id");
                                     Log.d(TAG, document.getId() + " => " + requestName);
-                                    if(state.equals("in-progress")) {
+                                    if(state.equals("in-progress") && myID.equals(userID)) {
                                         reqNameArray.add(requestName);
                                         stateArray.add(state);
                                         volIDArray.add(volID);

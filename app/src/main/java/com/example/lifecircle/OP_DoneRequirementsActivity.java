@@ -10,7 +10,6 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -22,8 +21,6 @@ import android.widget.Button;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.firestore.DocumentReference;
-import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
@@ -32,21 +29,18 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
-public class Vol_ListActivesActivity extends AppCompatActivity {
-
+public class OP_DoneRequirementsActivity extends AppCompatActivity {
 
     private RecyclerView mRecyclerView;
-    private VolAdapter mAdapter;
+    private OPDoneAdapter mAdapter;
+
     ArrayList<String> reqNameArray = new ArrayList<String>();
-    ArrayList<String> dateTimeArray = new ArrayList<String>();
-    ArrayList<String> opArray = new ArrayList<String>();
-    ArrayList<String> latArray = new ArrayList<String>();
-    ArrayList<String> longArray = new ArrayList<String>();
-    ArrayList<String> ratingArray = new ArrayList<String>();
-    ArrayList<String> idArray = new ArrayList<String>();
-    ArrayList<String> docIDArray = new ArrayList<String>();
     ArrayList<String> stateArray = new ArrayList<String>();
+    ArrayList<String> volIDArray = new ArrayList<String>();
+    ArrayList<String> docIDArray = new ArrayList<String>();
 
     public static final String TAG = "TAG";
     private ProgressDialog progrDialog;
@@ -58,8 +52,7 @@ public class Vol_ListActivesActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_vol_list_actives);
-
+        setContentView(R.layout.activity_op_done_requirements);
 
 
 
@@ -70,10 +63,6 @@ public class Vol_ListActivesActivity extends AppCompatActivity {
         if(actionBar!=null) {
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
-
-
-
-
 
 
 
@@ -92,33 +81,18 @@ public class Vol_ListActivesActivity extends AppCompatActivity {
                             for (QueryDocumentSnapshot document : task.getResult()) {
                                 Log.d(TAG, document.getId() + " => " + document.getData());
                                 JSONObject jsonObject = new JSONObject(document.getData());
-
-
-
                                 try {
                                     String requestName = jsonObject.getString("requestName");
-                                    String dateTime = jsonObject.getString("dateTime");
-                                    String lats = jsonObject.getString("lat");
-                                    String longs = jsonObject.getString("long");
                                     String state = jsonObject.getString("state");
+                                    String volID = jsonObject.getString("volID");
                                     String docID = jsonObject.getString("doc_id");
                                     Log.d(TAG, document.getId() + " => " + requestName);
-                                    if(state.equals("pending") || state.equals("active")) {
+                                    if(state.equals("done") || state.equals("rated")) {
                                         reqNameArray.add(requestName);
-                                        dateTimeArray.add(dateTime);
-                                        latArray.add(lats);
-                                        longArray.add(longs);
                                         stateArray.add(state);
+                                        volIDArray.add(volID);
                                         docIDArray.add(docID);
-
-
-                                        idArray.add(jsonObject.getString("id"));
                                     }
-
-                                    Log.d(TAG, document.getId() + " => " + idArray);
-
-
-
 
                                 } catch (JSONException e) {
                                     e.printStackTrace();
@@ -128,50 +102,15 @@ public class Vol_ListActivesActivity extends AppCompatActivity {
                             Log.d(TAG, "Error getting documents: ", task.getException());
                         }
 
-//                        for(int i=0; i<idArray.size();i++) {
-//                            DocumentReference docRef = db.collection("FullNamePhoneEmail").document(idArray.get(i));
-//                            docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-//                                @Override
-//                                public void onComplete(@NonNull Task<DocumentSnapshot> task1) {
-//                                    if (task1.isSuccessful()) {
-//                                        DocumentSnapshot document1 = task1.getResult();
-//                                        if (document1.exists()) {
-//                                            Log.d(TAG, "DocumentSnapshot data: " + document1.getData());
-//                                            JSONObject jsonObject1 = new JSONObject(document1.getData());
-//                                            try {
-//                                                opArray.add(jsonObject1.getString("fullname"));
-//                                                Log.d(TAG, "HALOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO: " + opArray);
-//                                                ratingArray.add(jsonObject1.getString("rating"));
-//                                            } catch (JSONException e) {
-//                                                e.printStackTrace();
-//                                            }
-//
-//                                        } else {
-//                                            Log.d(TAG, "No such document");
-//                                        }
-//                                    } else {
-//                                        Log.d(TAG, "get failed with ", task1.getException());
-//                                    }
-
-                                    mRecyclerView = (RecyclerView) findViewById(R.id.listvol);
-                                    mRecyclerView.setHasFixedSize(true);
-                                    mRecyclerView.setLayoutManager(new LinearLayoutManager(Vol_ListActivesActivity.this));
-                                    mRecyclerView.setItemAnimator(new DefaultItemAnimator());
-                                    mAdapter = new VolAdapter(Vol_ListActivesActivity.this, reqNameArray, dateTimeArray, latArray, longArray, idArray, stateArray, docIDArray);
-                                    mRecyclerView.setAdapter(mAdapter);
-
-
-
-//                                }
-//                            });
-//                        }
-
-
+                        mRecyclerView = (RecyclerView) findViewById(R.id.list);
+                        mRecyclerView.setHasFixedSize(true);
+                        mRecyclerView.setLayoutManager(new LinearLayoutManager(OP_DoneRequirementsActivity.this));
+                        mRecyclerView.setItemAnimator(new DefaultItemAnimator());
+                        mAdapter = new OPDoneAdapter(OP_DoneRequirementsActivity.this, reqNameArray, stateArray, volIDArray, docIDArray);
+                        mRecyclerView.setAdapter(mAdapter);
                     }
                 });
-
     }
-
 
 
     @Override

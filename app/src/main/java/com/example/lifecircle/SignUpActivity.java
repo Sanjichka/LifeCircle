@@ -154,6 +154,7 @@ public class SignUpActivity extends AppCompatActivity {
                     userID = firebaseAuth.getCurrentUser().getUid();
                     DocumentReference documentReference = db.collection("types").document(userID);
                     DocumentReference DRFullNamePhoneEmail = db.collection("FullNamePhoneEmail").document(userID);
+                    DocumentReference DRCount = db.collection("CountReqs").document("reqs");
 
                     Map<String, Object> typeh = new HashMap<>();
                     typeh.put("email", email);
@@ -163,7 +164,10 @@ public class SignUpActivity extends AppCompatActivity {
                     fnpeh.put("fullname", fullname);
                     fnpeh.put("phone", phone);
                     fnpeh.put("email", email);
-                    fnpeh.put("rating", 0);
+                    fnpeh.put("rating", "0");
+
+                    Map<String, Object> counter = new HashMap<>();
+                    counter.put("count", "100");
 
                     documentReference.set(typeh).addOnSuccessListener(new OnSuccessListener<Void>() {
                         @Override
@@ -173,6 +177,13 @@ public class SignUpActivity extends AppCompatActivity {
                     });
 
                     DRFullNamePhoneEmail.set(fnpeh).addOnSuccessListener(new OnSuccessListener<Void>() {
+                        @Override
+                        public void onSuccess(Void unused) {
+                            Log.d(TAG, "on Success: " + userID);
+                        }
+                    });
+
+                    DRCount.set(counter).addOnSuccessListener(new OnSuccessListener<Void>() {
                         @Override
                         public void onSuccess(Void unused) {
                             Log.d(TAG, "on Success: " + userID);

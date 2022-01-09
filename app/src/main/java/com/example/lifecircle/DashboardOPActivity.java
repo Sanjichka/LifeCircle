@@ -16,7 +16,8 @@ public class DashboardOPActivity extends AppCompatActivity {
 
     private Button createreq;
     private Button listactreq;
-    private Button listpending;
+    private Button listinprogress;
+    private Button listdone;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,7 +29,8 @@ public class DashboardOPActivity extends AppCompatActivity {
 
         createreq = findViewById(R.id.createreq);
         listactreq = findViewById(R.id.listactreq);
-        listpending = findViewById(R.id.listpending);
+        listinprogress = findViewById(R.id.listinprogress);
+        listdone = findViewById(R.id.listdone);
 
 
         createreq.setOnClickListener(new View.OnClickListener(){
@@ -47,12 +49,19 @@ public class DashboardOPActivity extends AppCompatActivity {
                 //finish();
             }
         });
-        listpending.setOnClickListener(new View.OnClickListener(){
+        listinprogress.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view) {
                 Intent intent1 = new Intent(DashboardOPActivity.this, InProgressOPActivity.class);
                 startActivity(intent1);
                 //finish();
+            }
+        });
+        listdone.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View view) {
+                Intent intent1 = new Intent(DashboardOPActivity.this, OP_DoneRequirementsActivity.class);
+                startActivity(intent1);
             }
         });
 

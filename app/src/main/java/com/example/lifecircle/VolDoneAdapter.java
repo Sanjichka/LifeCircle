@@ -8,8 +8,10 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.Spinner;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -31,7 +33,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 
-public class VolMineAdapter extends RecyclerView.Adapter<VolMineAdapter.VolViewHolder> {
+public class VolDoneAdapter extends RecyclerView.Adapter<VolDoneAdapter.VolViewHolder> {
     private LayoutInflater mInflater;
     private Context mContext;
     private FirebaseAuth firebaseAuth;
@@ -55,7 +57,8 @@ public class VolMineAdapter extends RecyclerView.Adapter<VolMineAdapter.VolViewH
         public TextView myDistance;
         public TextView myRating;
         public TextView myWhose;
-        public Button finish_btn;
+        public Spinner spinner;
+
 
         public ImageView Pic;
         public VolViewHolder(View itemView) {
@@ -66,13 +69,14 @@ public class VolMineAdapter extends RecyclerView.Adapter<VolMineAdapter.VolViewH
             myDistance = (TextView) itemView.findViewById(R.id.distance);
             myRating = (TextView) itemView.findViewById(R.id.rating);
             myWhose = (TextView) itemView.findViewById(R.id.whose);
-            finish_btn = (Button) itemView.findViewById(R.id.btnfinish);
+
+            spinner = (Spinner) itemView.findViewById(R.id.spinner_vol);
 
             Pic = (ImageView) itemView.findViewById(R.id.picture);
         }
     }
 
-    public VolMineAdapter(Context context, ArrayList<String> reqNameArray, ArrayList<String> dateTimeArray, ArrayList<String> latArray, ArrayList<String> longArray, ArrayList<String> idArray, ArrayList<String> stateArray, ArrayList<String> docIDArray) {
+    public VolDoneAdapter(Context context, ArrayList<String> reqNameArray, ArrayList<String> dateTimeArray, ArrayList<String> latArray, ArrayList<String> longArray, ArrayList<String> idArray, ArrayList<String> stateArray, ArrayList<String> docIDArray) {
         mInflater = LayoutInflater.from(context);
         this.mContext = context;
 
@@ -93,23 +97,26 @@ public class VolMineAdapter extends RecyclerView.Adapter<VolMineAdapter.VolViewH
     @NonNull
     @Override
     public VolViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View mItemView = mInflater.inflate(R.layout.row_list_vol_mine, parent, false);
+        View mItemView = mInflater.inflate(R.layout.row_list_vol_done, parent, false);
         return new VolViewHolder(mItemView);
     }
 
     @Override
     public void onBindViewHolder(@NonNull VolViewHolder viewHolder, @SuppressLint("RecyclerView") int position) {
-        if(stateArray.get(position).equals("in-progress")) {
             viewHolder.myName.setText("Requirement Name: " + reqNameArray.get(position));
             viewHolder.myDateTime.setText("DateTime: " + dateTimeArray.get(position));
             //calculate distance
             db = FirebaseFirestore.getInstance();
             firebaseAuth = FirebaseAuth.getInstance();
             userID = firebaseAuth.getCurrentUser().getUid();
+            String opID = idArray.get(position);
+            if(stateArray.get(position).equals("done")) {
+                viewHolder.spinner.setVisibility(View.VISIBLE);
+            }
 
 
 
-            DocumentReference docRefz = db.collection("FullNamePhoneEmail").document(idArray.get(position));
+            DocumentReference docRefz = db.collection("FullNamePhoneEmail").document(opID);
             docRefz.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                 @Override
                 public void onComplete(@NonNull Task<DocumentSnapshot> task1) {
@@ -121,7 +128,17 @@ public class VolMineAdapter extends RecyclerView.Adapter<VolMineAdapter.VolViewH
                             try {
 
                                 viewHolder.myWhose.setText("Older Person : " + jsonObject1.getString("fullname"));
-                                viewHolder.myRating.setText("Older Person's Rating : " + jsonObject1.getString("rating"));
+                                if (jsonObject1.getString("rating").equals("0")) {
+
+                                    viewHolder.myRating.setText("Older Person's Rating : " + jsonObject1.getString("rating")+"/5");
+
+                                } else {
+                                    String[] rate = new String[2];
+                                    rate = jsonObject1.getString("rating").split("/");
+                                    double a = (double) (Double.parseDouble(rate[0]) / Integer.parseInt(rate[1]));
+                                    double round = Math.round(a * 100.0) / 100.0;
+                                    viewHolder.myRating.setText("Older Person's Rating : " + round +"/5");
+                                }
                             } catch (JSONException e) {
                                 e.printStackTrace();
                             }
@@ -132,10 +149,6 @@ public class VolMineAdapter extends RecyclerView.Adapter<VolMineAdapter.VolViewH
                     } else {
                         Log.d(TAG, "get failed with ", task1.getException());
                     }
-
-
-
-
 
                 }
             });
@@ -199,54 +212,109 @@ public class VolMineAdapter extends RecyclerView.Adapter<VolMineAdapter.VolViewH
             viewHolder.myState.setText("State: " + stateArray.get(position));
 
 
-            viewHolder.finish_btn.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
 
-                    Map<String, Object> map1 = new HashMap<>();
-                    map1.put("state", "done");
 
-                    db.collection("reqs_all").document(docIDArray.get(position)).update(map1);
-                    viewHolder.myState.setText("State: done");
 
-//                    db.collection("reqs_all")
-//                            .get()
-//                            .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-//                                @Override
-//                                public void onComplete(@NonNull Task<QuerySnapshot> task) {
-//                                    if (task.isSuccessful()) {
-//                                        if (Objects.requireNonNull(task.getResult()).size() > 0) {
-//
-//                                            int i = 0; //temporary index
-//                                            Map<Integer, Object> _docList = new HashMap<>(); // A hashMap to store document id
-//
-//                                            for (DocumentSnapshot _documentSnapshot : Objects.requireNonNull(task.getResult())) {
-//                                                _docList.put(i, _documentSnapshot.getId());//Store temporary index (i) mapping to each document
-//
-//                                                //Checks if i equals to the position needed.
-//                                                if (i == position) {
-//                                                    //Do something with the document at that index.
-//                                                    db.collection("reqs_all").document(_documentSnapshot.getId()).update(map1);
-//                                                    Log.d(TAG, "CHLEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEN: " + _documentSnapshot.getId());
-//                                                    Log.d(TAG, "CHLEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEN: " + position);
-//                                                    viewHolder.myState.setText("State: done");
-//                                                    return;
-//                                                }
-//
-//                                                i++;
-//                                            }
-//                                        }
-//                                    }
-//                                }
-//                            });
-                    viewHolder.finish_btn.setVisibility(View.INVISIBLE);
+            viewHolder.spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+
+            @Override
+            public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int pos, long id) {
+
+                if (!viewHolder.spinner.getSelectedItem().equals("Select")) {
+                    // your code here
+                    String in_rating = "0";
+                    if (viewHolder.spinner.getSelectedItem().equals("1")) {
+                        in_rating = "1";
+                    } else if (viewHolder.spinner.getSelectedItem().equals("2")) {
+                        in_rating = "2";
+                    } else if (viewHolder.spinner.getSelectedItem().equals("3")) {
+                        in_rating = "3";
+                    } else if (viewHolder.spinner.getSelectedItem().equals("4")) {
+                        in_rating = "4";
+                    } else if (viewHolder.spinner.getSelectedItem().equals("5")) {
+                        in_rating = "5";
+                    }
+
+                    Log.d(TAG, "IN-RATINGGGGGGGGGGGGGGGGGGGGGGGGGGGG: " + in_rating);
+
+
+                    final String[] rating = new String[1];
+                    //prvo izvlechi go rating, pa calculate, pa update
+
+                    DocumentReference docRef = db.collection("FullNamePhoneEmail").document(opID);
+                    String finalIn_rating = in_rating;
+                    docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                        @Override
+                        public void onComplete(@NonNull Task<DocumentSnapshot> task1) {
+                            if (task1.isSuccessful()) {
+                                DocumentSnapshot document1 = task1.getResult();
+                                if (document1.exists()) {
+                                    Log.d(TAG, "DocumentSnapshot data: " + document1.getData());
+                                    JSONObject jsonObject1 = new JSONObject(document1.getData());
+                                    try {
+                                        rating[0] = jsonObject1.getString("rating");
+                                        String[] rate = new String[2];
+                                        String[] finalrate = new String[2];
+                                        if (rating[0].equals("0")) {
+                                            rating[0] = "" + finalIn_rating + "/5";
+                                            finalrate[0] = finalIn_rating;
+                                            finalrate[1] = "1";
+
+                                            viewHolder.myRating.setText("Older Person's Rating : " + rating[0]);
+
+                                        } else {
+                                            rate = rating[0].split("/");
+                                            double a = (double) (Double.parseDouble(rate[0]) / Integer.parseInt(rate[1]));
+                                            double round = Math.round(a * 100.0) / 100.0;
+                                            rating[0] = Double.toString(round);
+                                            rating[0] += "/5";
+                                            finalrate[1] = Integer.toString(Integer.parseInt(rate[1])+1);
+                                            finalrate[0] = Integer.toString(Integer.parseInt(rate[0])+Integer.parseInt(finalIn_rating));
+
+                                            viewHolder.myRating.setText("Older Person's Rating : " + rating[0]);
+                                        }
+
+
+                                        String s = finalrate[0] + "/" + finalrate[1];
+                                        Map<String, Object> map1 = new HashMap<>();
+                                        map1.put("rating", s);
+
+
+                                        db.collection("FullNamePhoneEmail").document(opID).update(map1);
+
+
+                                    } catch (JSONException e) {
+                                        e.printStackTrace();
+                                    }
+
+                                } else {
+                                    Log.d(TAG, "No such document");
+                                }
+                            } else {
+                                Log.d(TAG, "get failed with ", task1.getException());
+                            }
+                        }
+                    });
+
+
+                    Map<String, Object> map2 = new HashMap<>();
+                    map2.put("state", "rated");
+
+                    db.collection("reqs_all").document(docIDArray.get(position)).update(map2);
+                    viewHolder.myState.setText("State: rated");
+
+
+
+                    viewHolder.spinner.setVisibility(View.INVISIBLE);
                 }
+            }
 
+            @Override
+            public void onNothingSelected(AdapterView<?> parentView) {
+                // your code here
+            }
 
-
-            });
-
-        }
+        });
     }
 
     @Override

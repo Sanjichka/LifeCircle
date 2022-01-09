@@ -4,6 +4,9 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.recyclerview.widget.DefaultItemAnimator;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.app.DatePickerDialog;
 import android.app.ProgressDialog;
@@ -22,15 +25,22 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.TimePicker;
 
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -55,6 +65,7 @@ public class OP_CreateRequirementsActivity extends AppCompatActivity {
     public String lat_my = "0";
     public String long_my = "0";
 
+    DocumentReference documentReference1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -107,7 +118,68 @@ public class OP_CreateRequirementsActivity extends AppCompatActivity {
         userID = firebaseAuth.getCurrentUser().getUid();
         String r = "req_"+userID;
         DocumentReference documentReference = db.collection(r).document();
-        DocumentReference documentReference1 = db.collection("reqs_all").document();
+
+        DocumentReference DRCount = db.collection("CountReqs").document("reqs");
+        DRCount.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task1) {
+                if (task1.isSuccessful()) {
+                    DocumentSnapshot document1 = task1.getResult();
+                    if (document1.exists()) {
+                        Log.d(TAG, "DocumentSnapshot data: " + document1.getData());
+                        JSONObject jsonObject1 = new JSONObject(document1.getData());
+                        try {
+                            String numb = jsonObject1.getString("count");
+                            Log.d(TAG, "HALOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO: " + numb);
+                            Integer a = Integer.parseInt(numb) - 1;
+
+                            documentReference1 = db.collection("reqs_all").document(Integer.toString(a));
+                            Map<String, Object> reqs = new HashMap<>();
+                            reqs.put("requestName", reqName);
+                            reqs.put("description", textArea);
+                            reqs.put("dateTime", dateTime);
+                            reqs.put("urgent", urgent);
+                            reqs.put("state", "active");
+                            reqs.put("times", times);
+                            reqs.put("id", userID);
+                            reqs.put("lat", lat_my);
+                            reqs.put("long", long_my);
+                            reqs.put("volID", "none");
+                            reqs.put("doc_id", documentReference1.getId());
+
+                            documentReference1.set(reqs).addOnSuccessListener(new OnSuccessListener<Void>() {
+                                @Override
+                                public void onSuccess(Void unused) {
+                                    Log.d(TAG, "on Success: " + userID);
+                                }
+                            });
+
+
+                            Map<String, Object> map1 = new HashMap<>();
+                            map1.put("count", Integer.toString(a));
+                            db.collection("CountReqs").document("reqs").update(map1);
+
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+
+                    } else {
+                        Log.d(TAG, "No such document");
+                    }
+                } else {
+                    Log.d(TAG, "get failed with ", task1.getException());
+                }
+            }
+        });
+
+
+
+
+
+
+
+
+
 
 //        db.collection("reqs_all").get()
 //                .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
@@ -122,17 +194,7 @@ public class OP_CreateRequirementsActivity extends AppCompatActivity {
 //                    }
 //                });
 
-        Map<String, Object> reqs = new HashMap<>();
-        reqs.put("requestName", reqName);
-        reqs.put("description", textArea);
-        reqs.put("dateTime", dateTime);
-        reqs.put("urgent", urgent);
-        reqs.put("times", times);
-        reqs.put("state", "active");
-        reqs.put("id", userID);
-        reqs.put("lat", lat_my);
-        reqs.put("long", long_my);
-        reqs.put("volID", "none");
+
 
         Map<String, Object> reqs1 = new HashMap<>();
         reqs1.put("requestName", reqName);
@@ -150,12 +212,7 @@ public class OP_CreateRequirementsActivity extends AppCompatActivity {
                 Log.d(TAG, "on Success: " + userID);
             }
         });
-        documentReference1.set(reqs).addOnSuccessListener(new OnSuccessListener<Void>() {
-            @Override
-            public void onSuccess(Void unused) {
-                Log.d(TAG, "on Success: " + userID);
-            }
-        });
+
 
         Intent intent = new Intent(OP_CreateRequirementsActivity.this, DashboardOPActivity.class);
         startActivity(intent);

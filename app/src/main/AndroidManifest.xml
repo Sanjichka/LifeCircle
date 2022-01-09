@@ -19,9 +19,18 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.LifeCircle">
         <activity
+            android:name=".Vol_ListDoneActivity"
+            android:exported="true"
+            android:parentActivityName=".DashboardVolActivity" />
+        <activity android:name=".Pop"></activity>
+        <activity
+            android:name=".OP_DoneRequirementsActivity"
+            android:exported="true"
+            android:parentActivityName=".DashboardOPActivity" />
+        <activity
             android:name=".InProgressOPActivity"
-            android:parentActivityName=".DashboardOPActivity"
-            android:exported="true" />
+            android:exported="true"
+            android:parentActivityName=".DashboardOPActivity" />
         <activity
             android:name=".Vol_ListActivesActivity"
             android:exported="true"

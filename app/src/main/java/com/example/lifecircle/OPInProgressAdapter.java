@@ -97,7 +97,15 @@ public class OPInProgressAdapter extends RecyclerView.Adapter<OPInProgressAdapte
                             JSONObject jsonObject1 = new JSONObject(document1.getData());
                             try {
 
-                                viewHolder.volRating.setText("Volunteer's Rating : " + jsonObject1.getString("rating"));
+                                if (jsonObject1.getString("rating").equals("0")) {
+                                    viewHolder.volRating.setText("Volunteer's Rating : " + jsonObject1.getString("rating")+"/5");
+                                } else {
+                                    String[] rate = new String[2];
+                                    rate = jsonObject1.getString("rating").split("/");
+                                    double a = (double) (Double.parseDouble(rate[0]) / Integer.parseInt(rate[1]));
+                                    double round = Math.round(a * 100.0) / 100.0;
+                                    viewHolder.volRating.setText("Volunteer's Rating : " + round +"/5");
+                                }
                                 viewHolder.volPhone.setText("Volunteer's Phone Number : " + jsonObject1.getString("phone"));
                                 viewHolder.volEmail.setText("Volunteer's Email : " + jsonObject1.getString("email"));
                                 viewHolder.volName.setText("Volunteer's Name : " + jsonObject1.getString("fullname"));

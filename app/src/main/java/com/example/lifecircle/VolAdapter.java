@@ -45,6 +45,7 @@ public class VolAdapter extends RecyclerView.Adapter<VolAdapter.VolViewHolder> {
     ArrayList<String> latArray;
     ArrayList<String> longArray;
     ArrayList<String> idArray;
+    ArrayList<String> docIDArray;
     ArrayList<String> stateArray;
 
     public class VolViewHolder extends RecyclerView.ViewHolder {
@@ -71,16 +72,17 @@ public class VolAdapter extends RecyclerView.Adapter<VolAdapter.VolViewHolder> {
         }
     }
 
-    public VolAdapter(Context context, ArrayList<String> reqNameArray, ArrayList<String> dateTimeArray, ArrayList<String> opArray, ArrayList<String> ratingArray, ArrayList<String> latArray, ArrayList<String> longArray, ArrayList<String> idArray, ArrayList<String> stateArray) {
+    public VolAdapter(Context context, ArrayList<String> reqNameArray, ArrayList<String> dateTimeArray, ArrayList<String> latArray, ArrayList<String> longArray, ArrayList<String> idArray, ArrayList<String> stateArray, ArrayList<String> docIDArray) {
         mInflater = LayoutInflater.from(context);
         this.mContext = context;
         this.reqNameArray = reqNameArray;
         this.dateTimeArray = dateTimeArray;
-        this.opArray = opArray;
-        this.ratingArray = ratingArray;
+//        this.opArray = opArray;
+//        this.ratingArray = ratingArray;
         this.latArray = latArray;
         this.longArray = longArray;
         this.idArray = idArray;
+        this.docIDArray = docIDArray;
         this.stateArray = stateArray;
     }
 
@@ -95,11 +97,45 @@ public class VolAdapter extends RecyclerView.Adapter<VolAdapter.VolViewHolder> {
     public void onBindViewHolder(@NonNull VolViewHolder viewHolder, @SuppressLint("RecyclerView") int position) {
             viewHolder.myName.setText("Requirement Name: " + reqNameArray.get(position));
             viewHolder.myDateTime.setText("DateTime: " + dateTimeArray.get(position));
-            viewHolder.myWhose.setText("Older Person : " + opArray.get(position));
-            //calculate distance
-            db = FirebaseFirestore.getInstance();
-            firebaseAuth = FirebaseAuth.getInstance();
-            userID = firebaseAuth.getCurrentUser().getUid();
+            Log.d(TAG, "VALUEEEEEEEEEEEEEEEEEEEEEEEE: " + idArray);
+
+
+        //calculate distance
+        db = FirebaseFirestore.getInstance();
+        firebaseAuth = FirebaseAuth.getInstance();
+        userID = firebaseAuth.getCurrentUser().getUid();
+
+        DocumentReference docRefz = db.collection("FullNamePhoneEmail").document(idArray.get(position));
+        docRefz.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task1) {
+                if (task1.isSuccessful()) {
+                    DocumentSnapshot document1 = task1.getResult();
+                    if (document1.exists()) {
+                        Log.d(TAG, "DocumentSnapshot data: " + document1.getData());
+                        JSONObject jsonObject1 = new JSONObject(document1.getData());
+                        try {
+
+                            viewHolder.myWhose.setText("Older Person : " + jsonObject1.getString("fullname"));
+                            viewHolder.myRating.setText("Older Person's Rating : " + jsonObject1.getString("rating"));
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+
+                    } else {
+                        Log.d(TAG, "No such document");
+                    }
+                } else {
+                    Log.d(TAG, "get failed with ", task1.getException());
+                }
+
+
+
+
+
+            }
+        });
+
 
             final double[] req_lat = {Double.parseDouble(latArray.get(position))};
             final double[] req_long = {Double.parseDouble(longArray.get(position))};
@@ -152,7 +188,6 @@ public class VolAdapter extends RecyclerView.Adapter<VolAdapter.VolViewHolder> {
                     }
                 }
             });
-            viewHolder.myRating.setText("Older Person's Rating : " + ratingArray.get(position));
             viewHolder.myState.setText("State: " + stateArray.get(position));
 
             if (stateArray.get(position).equals("pending")) {
@@ -174,33 +209,36 @@ public class VolAdapter extends RecyclerView.Adapter<VolAdapter.VolViewHolder> {
                     map1.put("state", "pending");
                     map1.put("volID", userID);
 
-                    db.collection("reqs_all")
-                            .get()
-                            .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                                @Override
-                                public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                                    if (task.isSuccessful()) {
-                                        if (Objects.requireNonNull(task.getResult()).size() > 0) {
-                                            int i = 0; //temporary index
-                                            Map<Integer, Object> _docList = new HashMap<>(); // A hashMap to store document id
+                    db.collection("reqs_all").document(docIDArray.get(position)).update(map1);
+                    viewHolder.myState.setText("State: pending");
 
-                                            for (DocumentSnapshot _documentSnapshot : Objects.requireNonNull(task.getResult())) {
-                                                _docList.put(i, _documentSnapshot.getId());//Store temporary index (i) mapping to each document
-
-                                                //Checks if i equals to the position needed.
-                                                if (i == position) {
-                                                    //Do something with the document at that index.
-                                                    db.collection("reqs_all").document(_documentSnapshot.getId()).update(map1);
-                                                    viewHolder.myState.setText("State: pending");
-                                                    return;
-                                                }
-
-                                                i++; //Increase the temp index if the statement is not true
-                                            }
-                                        }
-                                    }
-                                }
-                            });
+//                    db.collection("reqs_all")
+//                            .get()
+//                            .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+//                                @Override
+//                                public void onComplete(@NonNull Task<QuerySnapshot> task) {
+//                                    if (task.isSuccessful()) {
+//                                        if (Objects.requireNonNull(task.getResult()).size() > 0) {
+//                                            int i = 0; //temporary index
+//                                            Map<Integer, Object> _docList = new HashMap<>(); // A hashMap to store document id
+//
+//                                            for (DocumentSnapshot _documentSnapshot : Objects.requireNonNull(task.getResult())) {
+//                                                _docList.put(i, _documentSnapshot.getId());//Store temporary index (i) mapping to each document
+//
+//                                                //Checks if i equals to the position needed.
+//                                                if (i == position) {
+//                                                    //Do something with the document at that index.
+//                                                    db.collection("reqs_all").document(_documentSnapshot.getId()).update(map1);
+//                                                    viewHolder.myState.setText("State: pending");
+//                                                    return;
+//                                                }
+//
+//                                                i++;
+//                                            }
+//                                        }
+//                                    }
+//                                }
+//                            });
 
                 }
             });

@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#69f542">
+
+    <TextView
+        android:id="@+id/ratethevol"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="30dp"
+        android:textSize="22sp"
+        android:layout_centerHorizontal="true"
+        android:textColor="@color/colorPrimary"
+        android:text="Rate the volunteer 1-5"/>
+
+    <RadioGroup
+        android:id="@+id/raterg"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@+id/ratethevol">
+        <RadioButton
+            android:id="@+id/rate1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:buttonTint="@color/colorPrimary"
+            android:textStyle="bold"
+            android:textColor="@color/colorPrimary"
+            android:text="1"/>
+
+        <RadioButton
+            android:id="@+id/rate2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:buttonTint="@color/colorPrimary"
+            android:textStyle="bold"
+            android:textColor="@color/colorPrimary"
+            android:text="2"/>
+
+        <RadioButton
+            android:id="@+id/rate3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:buttonTint="@color/colorPrimary"
+            android:textStyle="bold"
+            android:textColor="@color/colorPrimary"
+            android:text="3"/>
+
+        <RadioButton
+            android:id="@+id/rate4"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:buttonTint="@color/colorPrimary"
+            android:textStyle="bold"
+            android:textColor="@color/colorPrimary"
+            android:text="4"/>
+
+        <RadioButton
+            android:id="@+id/rate5"
+            android:checked="true"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:buttonTint="@color/colorPrimary"
+            android:textStyle="bold"
+            android:textColor="@color/colorPrimary"
+            android:text="5"/>
+    </RadioGroup>
+
+
+    <!--<Button
+        android:id="@+id/btn_popup_rate"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="10dp"
+        android:layout_below="@id/raterg"
+        android:padding="10dp"
+        android:textSize="15sp"
+        android:textStyle="bold"
+        android:textColor="@color/white"
+        android:backgroundTint="@android:color/holo_orange_dark"
+        android:text="Rate" />-->
+
+</RelativeLayout>

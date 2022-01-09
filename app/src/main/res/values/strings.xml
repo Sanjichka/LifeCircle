@@ -28,5 +28,17 @@
     <string name="mine_activities">Mine Activities</string>
     <string name="active_activities">Active Activities</string>
     <string name="inprogress_requirements">IN-PROGRESS REQUIREMENTS</string>
+    <string name="done_requirements">DONE REQUIREMENTS</string>
+    <string name="rate">RATE</string>
+    <string name="done_activities">DONE ACTIVITIES</string>
+
+    <string-array name="ratings">
+        <item>Select</item>
+        <item>5</item>
+        <item>4</item>
+        <item>3</item>
+        <item>2</item>
+        <item>1</item>
+    </string-array>
 
 </resources>

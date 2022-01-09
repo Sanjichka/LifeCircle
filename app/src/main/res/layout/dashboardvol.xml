@@ -49,5 +49,12 @@
             android:layout_height="wrap_content"
             android:text="@string/active_activities"/>
 
+        <Button
+            android:id="@+id/list_vol_done"
+            android:layout_marginTop="20dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/done_activities"/>
+
     </LinearLayout>
 </LinearLayout>

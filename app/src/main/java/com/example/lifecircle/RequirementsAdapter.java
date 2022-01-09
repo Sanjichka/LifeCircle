@@ -6,6 +6,7 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.TypedArray;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,6 +15,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.DefaultItemAnimator;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -23,6 +26,9 @@ import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.text.BreakIterator;
 import java.util.ArrayList;
@@ -40,9 +46,12 @@ public class RequirementsAdapter extends RecyclerView.Adapter<RequirementsAdapte
     ArrayList<String> timesArray;
     ArrayList<String> stateArray;
     ArrayList<String> volIDArray;
+    ArrayList<String> myIDArray;
+    ArrayList<String> docIDArray;
     private FirebaseAuth firebaseAuth;
     FirebaseFirestore db;
     String userID;
+    public static final String TAG = "TAG";
 
     public class RequirementsViewHolder extends RecyclerView.ViewHolder {
         public TextView myName;
@@ -69,7 +78,7 @@ public class RequirementsAdapter extends RecyclerView.Adapter<RequirementsAdapte
         }
     }
 
-    public RequirementsAdapter(Context context, ArrayList<String> reqNameArray, ArrayList<String> descriptionArray, ArrayList<String> dateTimeArray, ArrayList<String> urgentArray, ArrayList<String> timesArray, ArrayList<String> stateArray, ArrayList<String> volIDArray) {
+    public RequirementsAdapter(Context context, ArrayList<String> reqNameArray, ArrayList<String> descriptionArray, ArrayList<String> dateTimeArray, ArrayList<String> urgentArray, ArrayList<String> timesArray, ArrayList<String> stateArray, ArrayList<String> volIDArray, ArrayList<String> myIDArray, ArrayList<String> docIDArray) {
         mInflater = LayoutInflater.from(context);
         this.mContext = context;
         this.reqNameArray = reqNameArray;
@@ -79,6 +88,8 @@ public class RequirementsAdapter extends RecyclerView.Adapter<RequirementsAdapte
         this.timesArray = timesArray;
         this.stateArray = stateArray;
         this.volIDArray = volIDArray;
+        this.myIDArray = myIDArray;
+        this.docIDArray = docIDArray;
     }
 
     @NonNull
@@ -95,6 +106,22 @@ public class RequirementsAdapter extends RecyclerView.Adapter<RequirementsAdapte
         firebaseAuth = FirebaseAuth.getInstance();
         userID = firebaseAuth.getCurrentUser().getUid();
 
+        int flag = -1;
+        int position_in_all = 0;
+
+        Log.d(TAG, "" + myIDArray);
+
+        for(int y=0; y<myIDArray.size(); y++) {
+            if(myIDArray.get(y).equals(userID)) {
+                flag++;
+                if(flag==position) {
+                    position_in_all = y;
+                    break;
+                }
+            }
+        }
+
+
         viewHolder.myDescr.setText("Description: "+descriptionArray.get(position));
         viewHolder.myName.setText("Requirement Name: "+reqNameArray.get(position));
         viewHolder.myTimes.setText("Times: "+timesArray.get(position));
@@ -104,6 +131,7 @@ public class RequirementsAdapter extends RecyclerView.Adapter<RequirementsAdapte
             viewHolder.acceptbtn.setVisibility(View.VISIBLE);
             viewHolder.rejectbtn.setVisibility(View.VISIBLE);
         }
+        int finalPosition_in_all = position_in_all;
         viewHolder.acceptbtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -111,43 +139,46 @@ public class RequirementsAdapter extends RecyclerView.Adapter<RequirementsAdapte
                 viewHolder.acceptbtn.setVisibility(View.INVISIBLE);
                 viewHolder.rejectbtn.setVisibility(View.INVISIBLE);
 
+                Log.d(TAG, "CHLEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEN: " + myIDArray);
 
                 Map<String, Object> map1 = new HashMap<>();
                 map1.put("state", "in-progress");
 
-                db.collection("reqs_all")
-                        .get()
-                        .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>()
-                        {
-                            @Override
-                            public void onComplete(@NonNull Task<QuerySnapshot> task)
-                            {
-                                if(task.isSuccessful())
-                                {
-                                    if(Objects.requireNonNull(task.getResult()).size() > 0)
-                                    {
-                                        int i = 0; //temporary index
-                                        Map<Integer, Object> _docList = new HashMap<>(); // A hashMap to store document id
+                db.collection("reqs_all").document(docIDArray.get(position)).update(map1);
+                viewHolder.myState.setText("State: in-progress");
 
-                                        for(DocumentSnapshot _documentSnapshot : Objects.requireNonNull(task.getResult()))
-                                        {
-                                            _docList.put(i, _documentSnapshot.getId());//Store temporary index (i) mapping to each document
-
-                                            //Checks if i equals to the position needed.
-                                            if(i == position)
-                                            {
-                                                //Do something with the document at that index.
-                                                db.collection("reqs_all").document(_documentSnapshot.getId()).update(map1);
-                                                viewHolder.myState.setText("State: in-progress");
-                                                return;
-                                            }
-
-                                            i++; //Increase the temp index if the statement is not true
-                                        }
-                                    }
-                                }
-                            }
-                        });
+//
+//                db.collection("reqs_all")
+//                        .get()
+//                        .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+//                            @Override
+//                            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+//                                if (task.isSuccessful()) {
+//                                    if (Objects.requireNonNull(task.getResult()).size() > 0) {
+//
+//
+//                                        int i = 0; //temporary index
+//                                        Map<Integer, Object> _docList = new HashMap<>(); // A hashMap to store document id
+//
+//                                        for (DocumentSnapshot _documentSnapshot : Objects.requireNonNull(task.getResult())) {
+//                                            _docList.put(i, _documentSnapshot.getId());//Store temporary index (i) mapping to each document
+//
+//                                            //Checks if i equals to the position needed.
+//                                            if (i == finalPosition_in_all) {
+//                                                //Do something with the document at that index.
+//                                                db.collection("reqs_all").document(_documentSnapshot.getId()).update(map1);
+//                                                Log.d(TAG, "CHLEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEN: " + _documentSnapshot.getId());
+//                                                Log.d(TAG, "CHLEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEN: " + finalPosition_in_all);
+//                                                viewHolder.myState.setText("State: in-progress");
+//                                                return;
+//                                            }
+//
+//                                            i++;
+//                                        }
+//                                    }
+//                                }
+//                            }
+//                        });
 
             }
         });
@@ -182,7 +213,7 @@ public class RequirementsAdapter extends RecyclerView.Adapter<RequirementsAdapte
                                             _docList.put(i, _documentSnapshot.getId());//Store temporary index (i) mapping to each document
 
                                             //Checks if i equals to the position needed.
-                                            if(i == position)
+                                            if(i == finalPosition_in_all)
                                             {
                                                 //Do something with the document at that index.
                                                 db.collection("reqs_all").document(_documentSnapshot.getId()).update(map1);

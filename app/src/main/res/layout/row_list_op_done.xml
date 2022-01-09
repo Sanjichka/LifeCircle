@@ -102,9 +102,8 @@
             android:textColor="@color/colorPrimary"
             android:text="State: " />
 
-        <Button
-            android:id="@+id/btnrate"
-            android:visibility="invisible"
+        <!--<Button
+            android:id="@+id/btn_op_rate"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@id/picture"
@@ -113,7 +112,21 @@
             android:textSize="15sp"
             android:textStyle="bold"
             android:textColor="@color/white"
-            android:text="Rate" />
+            android:text="Rate" />-->
+
+        <Spinner
+            android:id="@+id/spinner"
+            android:visibility="invisible"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:entries="@array/ratings"
+            android:prompt="@string/rate"
+            android:layout_alignParentRight="true"
+            android:layout_below="@id/picture"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            android:spinnerMode="dialog"
+            android:layout_marginTop="7dp" />
 
     </RelativeLayout>
 </androidx.cardview.widget.CardView>

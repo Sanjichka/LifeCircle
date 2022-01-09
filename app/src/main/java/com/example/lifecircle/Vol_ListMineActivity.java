@@ -30,6 +30,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Collections;
 
 public class Vol_ListMineActivity extends AppCompatActivity {
 
@@ -37,13 +38,11 @@ public class Vol_ListMineActivity extends AppCompatActivity {
     private VolMineAdapter mAdapter;
     ArrayList<String> reqNameArray = new ArrayList<String>();
     ArrayList<String> dateTimeArray = new ArrayList<String>();
-    ArrayList<String> opArray = new ArrayList<String>();
     ArrayList<String> latArray = new ArrayList<String>();
     ArrayList<String> longArray = new ArrayList<String>();
-    ArrayList<String> ratingArray = new ArrayList<String>();
     ArrayList<String> idArray = new ArrayList<String>();
     ArrayList<String> stateArray = new ArrayList<String>();
-    private Button applybtn;
+    ArrayList<String> docIDArray = new ArrayList<String>();
 
     public static final String TAG = "TAG";
     private ProgressDialog progrDialog;
@@ -78,6 +77,9 @@ public class Vol_ListMineActivity extends AppCompatActivity {
         firebaseAuth = FirebaseAuth.getInstance();
         progrDialog = new ProgressDialog(this);
         userID = firebaseAuth.getCurrentUser().getUid();
+
+
+
         db.collection("reqs_all")
                 .get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
@@ -96,18 +98,20 @@ public class Vol_ListMineActivity extends AppCompatActivity {
                                     String lats = jsonObject.getString("lat");
                                     String longs = jsonObject.getString("long");
                                     String state = jsonObject.getString("state");
+                                    String docID = jsonObject.getString("doc_id");
                                     Log.d(TAG, document.getId() + " => " + requestName);
-                                    if(state.equals("in-progress")) {
+                                    if(state.equals("in-progress")) { // || state.equals("done") || state.equals("rated")) {
                                         reqNameArray.add(requestName);
                                         dateTimeArray.add(dateTime);
                                         latArray.add(lats);
                                         longArray.add(longs);
                                         stateArray.add(state);
+                                        docIDArray.add(docID);
 
 
                                         idArray.add(jsonObject.getString("id"));
                                     }
-
+                                    Log.d(TAG, document.getId() + " => " + reqNameArray);
                                     Log.d(TAG, document.getId() + " => " + idArray);
 
 
@@ -121,30 +125,30 @@ public class Vol_ListMineActivity extends AppCompatActivity {
                             Log.d(TAG, "Error getting documents: ", task.getException());
                         }
 
-                        for(int i=0; i<idArray.size();i++) {
-                            DocumentReference docRef = db.collection("FullNamePhoneEmail").document(idArray.get(i));
-                            docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-                                @Override
-                                public void onComplete(@NonNull Task<DocumentSnapshot> task1) {
-                                    if (task1.isSuccessful()) {
-                                        DocumentSnapshot document1 = task1.getResult();
-                                        if (document1.exists()) {
-                                            Log.d(TAG, "DocumentSnapshot data: " + document1.getData());
-                                            JSONObject jsonObject1 = new JSONObject(document1.getData());
-                                            try {
-                                                opArray.add(jsonObject1.getString("fullname"));
-                                                Log.d(TAG, "HALOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO: " + opArray);
-                                                ratingArray.add(jsonObject1.getString("rating"));
-                                            } catch (JSONException e) {
-                                                e.printStackTrace();
-                                            }
-
-                                        } else {
-                                            Log.d(TAG, "No such document");
-                                        }
-                                    } else {
-                                        Log.d(TAG, "get failed with ", task1.getException());
-                                    }
+//                        for(int i=0; i<idArray.size();i++) {
+//                            DocumentReference docRef = db.collection("FullNamePhoneEmail").document(idArray.get(i));
+//                            docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+//                                @Override
+//                                public void onComplete(@NonNull Task<DocumentSnapshot> task1) {
+//                                    if (task1.isSuccessful()) {
+//                                        DocumentSnapshot document1 = task1.getResult();
+//                                        if (document1.exists()) {
+//                                            Log.d(TAG, "DocumentSnapshot data: " + document1.getData());
+//                                            JSONObject jsonObject1 = new JSONObject(document1.getData());
+//                                            try {
+//                                                opArray.add(jsonObject1.getString("fullname"));
+//                                                Log.d(TAG, "HALOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO: " + opArray);
+//                                                ratingArray.add(jsonObject1.getString("rating"));
+//                                            } catch (JSONException e) {
+//                                                e.printStackTrace();
+//                                            }
+//
+//                                        } else {
+//                                            Log.d(TAG, "No such document");
+//                                        }
+//                                    } else {
+//                                        Log.d(TAG, "get failed with ", task1.getException());
+//                                    }
 
 
 
@@ -153,11 +157,11 @@ public class Vol_ListMineActivity extends AppCompatActivity {
                                     mRecyclerView.setHasFixedSize(true);
                                     mRecyclerView.setLayoutManager(new LinearLayoutManager(Vol_ListMineActivity.this));
                                     mRecyclerView.setItemAnimator(new DefaultItemAnimator());
-                                    mAdapter = new VolMineAdapter(Vol_ListMineActivity.this, reqNameArray, dateTimeArray, opArray, ratingArray, latArray, longArray, idArray, stateArray);
+                                    mAdapter = new VolMineAdapter(Vol_ListMineActivity.this, reqNameArray, dateTimeArray, latArray, longArray, idArray, stateArray, docIDArray);
                                     mRecyclerView.setAdapter(mAdapter);
-                                }
-                            });
-                        }
+//                                }
+//                            });
+//                        }
 
 
                     }
