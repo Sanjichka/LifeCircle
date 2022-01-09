@@ -110,7 +110,7 @@ public class VolDoneAdapter extends RecyclerView.Adapter<VolDoneAdapter.VolViewH
             firebaseAuth = FirebaseAuth.getInstance();
             userID = firebaseAuth.getCurrentUser().getUid();
             String opID = idArray.get(position);
-            if(stateArray.get(position).equals("done")) {
+            if(stateArray.get(position).equals("done") || stateArray.get(position).equals("rated_o")) {
                 viewHolder.spinner.setVisibility(View.VISIBLE);
             }
 
@@ -298,10 +298,18 @@ public class VolDoneAdapter extends RecyclerView.Adapter<VolDoneAdapter.VolViewH
 
 
                     Map<String, Object> map2 = new HashMap<>();
-                    map2.put("state", "rated");
+                    if(stateArray.get(position).equals("done")) {
+                        map2.put("state", "rated_v");
+                        db.collection("reqs_all").document(docIDArray.get(position)).update(map2);
+                        viewHolder.myState.setText("State: rated_v");
+                    }
+                    else{
+                        map2.put("state", "rated_vo");
+                        db.collection("reqs_all").document(docIDArray.get(position)).update(map2);
+                        viewHolder.myState.setText("State: rated_vo");
+                    }
 
-                    db.collection("reqs_all").document(docIDArray.get(position)).update(map2);
-                    viewHolder.myState.setText("State: rated");
+
 
 
 

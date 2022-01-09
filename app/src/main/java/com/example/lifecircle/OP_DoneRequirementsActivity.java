@@ -86,8 +86,9 @@ public class OP_DoneRequirementsActivity extends AppCompatActivity {
                                     String state = jsonObject.getString("state");
                                     String volID = jsonObject.getString("volID");
                                     String docID = jsonObject.getString("doc_id");
+                                    String myID = jsonObject.getString("id");
                                     Log.d(TAG, document.getId() + " => " + requestName);
-                                    if(state.equals("done") || state.equals("rated")) {
+                                    if((state.equals("done") || state.equals("rated_v") || state.equals("rated_vo")) && myID.equals(userID) ) {
                                         reqNameArray.add(requestName);
                                         stateArray.add(state);
                                         volIDArray.add(volID);

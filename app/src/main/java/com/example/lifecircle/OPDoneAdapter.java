@@ -96,7 +96,7 @@ public class OPDoneAdapter extends RecyclerView.Adapter<OPDoneAdapter.DoneViewHo
         db = FirebaseFirestore.getInstance();
         firebaseAuth = FirebaseAuth.getInstance();
         String volontID = volIDArray.get(position);
-        if(stateArray.get(position).equals("done")) {
+        if(stateArray.get(position).equals("done") || stateArray.get(position).equals("rated_v")) {
             viewHolder.spinner.setVisibility(View.VISIBLE);
         }
 
@@ -224,10 +224,17 @@ public class OPDoneAdapter extends RecyclerView.Adapter<OPDoneAdapter.DoneViewHo
 
 
                         Map<String, Object> map2 = new HashMap<>();
-                        map2.put("state", "rated");
+                        if(stateArray.get(position).equals("done")) {
+                            map2.put("state", "rated_o");
+                            db.collection("reqs_all").document(docIDArray.get(position)).update(map2);
+                            viewHolder.myState.setText("State: rated_o");
+                        }
+                        else {
+                            map2.put("state", "rated_vo");
+                            db.collection("reqs_all").document(docIDArray.get(position)).update(map2);
+                            viewHolder.myState.setText("State: rated_vo");
+                        }
 
-                        db.collection("reqs_all").document(docIDArray.get(position)).update(map2);
-                        viewHolder.myState.setText("State: rated");
 
 
 
