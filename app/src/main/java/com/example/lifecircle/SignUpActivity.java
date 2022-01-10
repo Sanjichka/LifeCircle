@@ -18,6 +18,9 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.recyclerview.widget.DefaultItemAnimator;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -26,7 +29,13 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -37,6 +46,7 @@ public class SignUpActivity extends AppCompatActivity {
     private Button SignUpBtn;
     private String type="olderperson";
     private TextView SignInTV;
+    ArrayList<String> cntArray = new ArrayList<String>();
     private ProgressDialog progrDialog;
     private FirebaseAuth firebaseAuth;
     FirebaseFirestore db;
@@ -166,8 +176,6 @@ public class SignUpActivity extends AppCompatActivity {
                     fnpeh.put("email", email);
                     fnpeh.put("rating", "0");
 
-                    Map<String, Object> counter = new HashMap<>();
-                    counter.put("count", "100");
 
                     documentReference.set(typeh).addOnSuccessListener(new OnSuccessListener<Void>() {
                         @Override
@@ -183,12 +191,62 @@ public class SignUpActivity extends AppCompatActivity {
                         }
                     });
 
-                    DRCount.set(counter).addOnSuccessListener(new OnSuccessListener<Void>() {
-                        @Override
-                        public void onSuccess(Void unused) {
-                            Log.d(TAG, "on Success: " + userID);
-                        }
-                    });
+
+
+                    if(type.equals("olderperson")) {
+                        db.collection("types")
+                                .get()
+                                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                                    @Override
+                                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                        if (task.isSuccessful()) {
+                                            for (QueryDocumentSnapshot document : task.getResult()) {
+                                                Log.d(TAG, document.getId() + " => " + document.getData());
+                                                JSONObject jsonObject = new JSONObject(document.getData());
+
+
+                                                try {
+                                                    String type = jsonObject.getString("type");
+                                                    Log.d(TAG, document.getId() + " => " + type);
+
+                                                    if (type.equals("olderperson"))
+                                                        cntArray.add(type);
+
+                                                    Log.d(TAG, document.getId() + " => " + cntArray);
+
+
+                                                } catch (JSONException e) {
+                                                    e.printStackTrace();
+                                                }
+
+
+                                            }
+                                            Log.d(TAG, "ZDRRRRRRRRRRRRRR" + " => " + cntArray.size());
+                                            if (cntArray.size() == 1) {
+                                                Log.d(TAG, "ZDRRRRRRRRRRRRRR" + " => " + cntArray.size());
+                                                Map<String, Object> counter = new HashMap<>();
+                                                counter.put("count", "100");
+                                                DRCount.set(counter).addOnSuccessListener(new OnSuccessListener<Void>() {
+                                                    @Override
+                                                    public void onSuccess(Void unused) {
+                                                        Log.d(TAG, "on Success: " + userID);
+                                                    }
+                                                });
+                                            }
+                                        } else {
+                                            Log.d(TAG, "Error getting documents: ", task.getException());
+                                        }
+
+
+                                    }
+                                });
+                    }
+
+
+
+
+
+
 
 
                     Intent intent = new Intent(SignUpActivity.this, MainActivity.class);
